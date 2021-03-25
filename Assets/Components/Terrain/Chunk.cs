@@ -315,7 +315,7 @@ namespace Antymology.Terrain
         /// </summary>
         public void LateUpdate()
         {
-            // If we need to update ou mesh, then do so now.
+            // If we need to update our mesh, then do so now.
             if (updateNeeded)
             {
                 GenerateMesh();

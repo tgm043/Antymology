@@ -54,4 +54,9 @@ public class ConfigurationManager : Singleton<ConfigurationManager>
     /// The number of ants
     /// </summary>
     public int Number_Of_Ants = 20;
+    
+    /// <summary>
+    /// Health gained from eating mulch
+    /// </summary>
+    public int MulchHp = 20;
 }

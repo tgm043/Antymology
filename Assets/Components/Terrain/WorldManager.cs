@@ -89,7 +89,7 @@ namespace Antymology.Terrain
         }
 
         /// <summary>
-        /// TO BE IMPLEMENTED BY YOU
+        /// Generate ants on the ground, randomly.
         /// </summary>
         private void GenerateAnts()
         {
@@ -242,6 +242,31 @@ namespace Antymology.Terrain
         #endregion
 
         #region Helpers
+        /// <summary>
+        /// returns the ground height at a column
+        /// </summary>
+        public int Ground(int xCoord, int zCoord){
+            if 
+            (
+                xCoord < 0 ||
+                zCoord < 0 ||
+                xCoord > Blocks.GetLength(0) ||
+                zCoord > Blocks.GetLength(2)
+            )
+            {
+                Debug.Log("Attempted to find a column which didn't exist");
+                return -1;
+            }
+            for (int i = 0; i < Blocks.GetLength(1); ++i){
+                if (Blocks[xCoord, i, zCoord] as AirBlock != null){
+                    return i;
+                }
+            }
+            //Debug.Log("Column is completely full");
+            return Blocks.GetLength(1);
+        }
+        
+            
 
         #region Blocks
 
