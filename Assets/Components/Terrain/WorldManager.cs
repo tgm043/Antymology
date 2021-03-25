@@ -17,7 +17,12 @@ namespace Antymology.Terrain
         public GameObject antPrefab;
 
         /// <summary>
-        /// The material used for eech block.
+        /// The ant references.
+        /// </summary>
+        public GameObject[] Ants;
+
+        /// <summary>
+        /// The material used for each block.
         /// </summary>
         public Material blockMaterial;
 
@@ -88,7 +93,24 @@ namespace Antymology.Terrain
         /// </summary>
         private void GenerateAnts()
         {
-            throw new NotImplementedException();
+            Ants = new GameObject[ConfigurationManager.Instance.Number_Of_Ants];
+            for (int i = 0; i < Ants.GetLength(0); i++)
+            {
+                
+                int xCoord = RNG.Next(0, Blocks.GetLength(0));
+                int zCoord = RNG.Next(0, Blocks.GetLength(2));
+                int yCoord = -1;
+                for (int j = Blocks.GetLength(1) - 1; j >= 0; j--)
+                {
+                    if (Blocks[xCoord, j, zCoord] as AirBlock == null)
+                    {
+                        yCoord = j+1;
+                        break;
+                    }
+                }
+                Ants[i] = Instantiate(antPrefab, new Vector3(xCoord, yCoord, zCoord), Quaternion.identity);
+
+            }
         }
 
         #endregion

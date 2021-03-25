@@ -33,7 +33,7 @@ namespace Antymology.Terrain
         }
 
         /// <summary>
-        /// mulch is a visible block.
+        /// nest is a visible block.
         /// </summary>
         public override bool isVisible()
         {

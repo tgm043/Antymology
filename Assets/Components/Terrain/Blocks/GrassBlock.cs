@@ -25,7 +25,7 @@ namespace Antymology.Terrain
         #region Methods
 
         /// <summary>
-        /// The tile at the 0, 1, position in the tilemap.
+        /// The tile at the 0, 2, position in the tilemap.
         /// </summary>
         public override Vector2 tileMapCoordinate()
         {
@@ -33,7 +33,7 @@ namespace Antymology.Terrain
         }
 
         /// <summary>
-        /// mulch is a visible block.
+        /// grass is a visible block.
         /// </summary>
         public override bool isVisible()
         {
