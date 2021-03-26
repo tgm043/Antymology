@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7757734045515210677}
   - component: {fileID: 7757734045515210676}
   - component: {fileID: 7757734045515210683}
-  - component: {fileID: -591865852250080185}
+  - component: {fileID: 2791852334723481496}
   m_Layer: 0
   m_Name: AntPrefab
   m_TagString: Untagged
@@ -94,7 +94,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-591865852250080185
+--- !u!114 &2791852334723481496
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -106,4 +106,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e479a303c4488144a20b86b43d7dac5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  seed: 0
   hp: 0

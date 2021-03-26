@@ -393,8 +393,8 @@ MonoBehaviour:
   Tile_Map_Unit_Ratio: 0.25
   Number_Of_Acidic_Regions: 10
   Acidic_Region_Radius: 5
-  Number_Of_Conatiner_Spheres: 5
-  Conatiner_Sphere_Radius: 20
+  Number_Of_Container_Spheres: 5
+  Container_Sphere_Radius: 10
   Number_Of_Ants: 100
   StartingHealth: 200
   MulchHp: 20

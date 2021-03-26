@@ -99,18 +99,12 @@ namespace Antymology.Terrain
                 
                 int xCoord = RNG.Next(1, Blocks.GetLength(0)-1);
                 int zCoord = RNG.Next(1, Blocks.GetLength(2)-1);
-                int yCoord = -1;
-                for (int j = Blocks.GetLength(1) - 1; j >= 0; j--)
-                {
-                    if (Blocks[xCoord, j, zCoord] as AirBlock == null)
-                    {
-                        yCoord = j+1;
-                        break;
-                    }
-                }
+                int yCoord = Ground(xCoord, zCoord);
                 Ants[i] = Instantiate(antPrefab, new Vector3(xCoord, yCoord, zCoord), Quaternion.identity);
-
             }
+            Ants[0].GetComponent<AntBehaviour>().isQueen = true;
+            Ants[0].GetComponent<Renderer>().material.color = Color.yellow;
+            
         }
 
         #endregion

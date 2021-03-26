@@ -8,10 +8,12 @@ namespace Antymology.Terrain
     {
         private WorldManager Winstance;
         private ConfigurationManager Config;
-        private GameObject[] Ants;
+        //private GameObject[] Ants;
+        
         private AbstractBlock Touching;
+        private Collider[] Sharing;
         private int x,y,z;
-        public int seed;
+        public bool isQueen;
         public float hp;
         
         
@@ -19,8 +21,9 @@ namespace Antymology.Terrain
         void Start()
         {
             Winstance = WorldManager.Instance;
-            Ants = Winstance.Ants;
-            hp = ConfigurationManager.Instance.StartingHealth;
+            Config = ConfigurationManager.Instance;
+            //Ants = Winstance.Ants;
+            hp = Config.StartingHealth;
             StartCoroutine("TimeStepUpdate");
         }
 
@@ -41,18 +44,24 @@ namespace Antymology.Terrain
                 y = (int) transform.position.y;
                 z = (int) transform.position.z;
                 Touching = Winstance.GetBlock(x,y-1,z);
+                Sharing = Physics.OverlapSphere(transform.position, 0.9f);
                 Move(Winstance.RNG.Next(-1, 2), Winstance.RNG.Next(-1, 2));
-                /*if (Touching as MulchBlock != null){
+                /*if (Touching as MulchBlock != null && Sharing.GetLength(0) == 0){
                     Consume();
                 } else if (Touching as ContainerBlock == null){
                     Dig();
                 }*/
-                if (Touching as AcidicBlock != null){
-                    hp-= ConfigurationManager.Instance.HpCost;
-                }
-                hp-= ConfigurationManager.Instance.HpCost;
                 
-                //Share();
+                if (isQueen) Build();
+                
+                Share();
+
+                if (Touching as AcidicBlock != null){
+                    hp-= Config.HpCost;
+                }
+                hp-= Config.HpCost;
+                
+                if (hp > Config.StartingHealth/2) Share();
                 
                 if (hp <= 0f){
                     gameObject.SetActive(false);
@@ -80,15 +89,13 @@ namespace Antymology.Terrain
         /// Shares health with other ants here.
         /// </summary>
         void Share(){
-            Collider[] overlap = Physics.OverlapSphere(transform.position, 0.9f);
-            for (int i = 0; i < overlap.GetLength(0); ++i){
-                if (overlap[i].gameObject.GetComponent<AntBehaviour>() == null) continue;
-                float friendHp = overlap[i].gameObject.GetComponent<AntBehaviour>().hp;
+            for (int i = 0; i < Sharing.GetLength(0); ++i){
+                if (Sharing[i].gameObject.GetComponent<AntBehaviour>() == null) continue;
+                float friendHp = Sharing[i].gameObject.GetComponent<AntBehaviour>().hp;
                 if (hp > friendHp){
                     hp = (hp+friendHp)/2;
-                    overlap[i].gameObject.GetComponent<AntBehaviour>().hp = hp;
-                    //Debug.Log("post-share-hp: " + hp);
-                    //Debug.Log("post-share-hp-2: " + friend.GetComponent<AntBehaviour>().hp);
+                    Sharing[i].gameObject.GetComponent<AntBehaviour>().hp = hp;
+                    Debug.Log("post-share-hp: " + hp);
                 }
             }
         }
@@ -98,7 +105,7 @@ namespace Antymology.Terrain
         /// </summary>
         void Consume(){
             Dig();
-            hp += ConfigurationManager.Instance.MulchHp;
+            hp += Config.MulchHp;
         }
         
         /// <summary>
@@ -108,6 +115,16 @@ namespace Antymology.Terrain
         {
             transform.Translate(Vector3.down);
             Winstance.SetBlock(x,y-1,z,new AirBlock());
+        }
+        
+        /// <summary>
+        /// Build a nest block.
+        /// </summary>
+        void Build()
+        {
+            hp *= 2f/3f;
+            transform.Translate(Vector3.up);
+            Winstance.SetBlock(x,y,z,new NestBlock());
         }
     }
 }
