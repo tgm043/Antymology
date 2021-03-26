@@ -358,6 +358,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   antPrefab: {fileID: 7757734045515210682, guid: 6deec01079de3d6479eac8934682106d,
     type: 3}
+  Ants: []
   blockMaterial: {fileID: 2100000, guid: 4db9d8fce1a69b74f81daf1375c9ed88, type: 2}
 --- !u!4 &964896558
 Transform:
@@ -393,5 +394,8 @@ MonoBehaviour:
   Number_Of_Acidic_Regions: 10
   Acidic_Region_Radius: 5
   Number_Of_Conatiner_Spheres: 5
-  Conatiner_Sphere_Radius: 10
-  Number_Of_Ants: 20
+  Conatiner_Sphere_Radius: 20
+  Number_Of_Ants: 100
+  StartingHealth: 200
+  MulchHp: 20
+  HpCost: 1

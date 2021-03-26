@@ -41,22 +41,32 @@ public class ConfigurationManager : Singleton<ConfigurationManager>
     public int Acidic_Region_Radius = 5;
 
     /// <summary>
-    /// The number of acidic regions on the map.
+    /// The number of container regions on the map.
     /// </summary>
-    public int Number_Of_Conatiner_Spheres = 5;
+    public int Number_Of_Container_Spheres = 5;
 
     /// <summary>
-    /// The radius of each acidic region
+    /// The radius of each container region
     /// </summary>
-    public int Conatiner_Sphere_Radius = 20;
+    public int Container_Sphere_Radius = 10;
     
     /// <summary>
     /// The number of ants
     /// </summary>
-    public int Number_Of_Ants = 20;
+    public int Number_Of_Ants = 100;
+    
+    /// <summary>
+    /// Initial health of ant
+    /// </summary>
+    public int StartingHealth = 200;
     
     /// <summary>
     /// Health gained from eating mulch
     /// </summary>
     public int MulchHp = 20;
+    
+    /// <summary>
+    /// Health loss per time step
+    /// </summary>
+    public int HpCost = 1;
 }

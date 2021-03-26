@@ -39,7 +39,7 @@ namespace Antymology.Terrain
         /// <summary>
         /// Random number generator.
         /// </summary>
-        private System.Random RNG;
+        public System.Random RNG;
 
         /// <summary>
         /// Random number generator.
@@ -97,8 +97,8 @@ namespace Antymology.Terrain
             for (int i = 0; i < Ants.GetLength(0); i++)
             {
                 
-                int xCoord = RNG.Next(0, Blocks.GetLength(0));
-                int zCoord = RNG.Next(0, Blocks.GetLength(2));
+                int xCoord = RNG.Next(1, Blocks.GetLength(0)-1);
+                int zCoord = RNG.Next(1, Blocks.GetLength(2)-1);
                 int yCoord = -1;
                 for (int j = Blocks.GetLength(1) - 1; j >= 0; j--)
                 {
@@ -250,8 +250,8 @@ namespace Antymology.Terrain
             (
                 xCoord < 0 ||
                 zCoord < 0 ||
-                xCoord > Blocks.GetLength(0) ||
-                zCoord > Blocks.GetLength(2)
+                xCoord >= Blocks.GetLength(0) ||
+                zCoord >= Blocks.GetLength(2)
             )
             {
                 Debug.Log("Attempted to find a column which didn't exist");
@@ -381,7 +381,7 @@ namespace Antymology.Terrain
         {
 
             //Generate hazards
-            for (int i = 0; i < ConfigurationManager.Instance.Number_Of_Conatiner_Spheres; i++)
+            for (int i = 0; i < ConfigurationManager.Instance.Number_Of_Container_Spheres; i++)
             {
                 int xCoord = RNG.Next(0, Blocks.GetLength(0));
                 int zCoord = RNG.Next(0, Blocks.GetLength(2));
@@ -389,17 +389,17 @@ namespace Antymology.Terrain
 
 
                 //Generate a sphere around this point overriding non-air blocks
-                for (int HX = xCoord - ConfigurationManager.Instance.Conatiner_Sphere_Radius; HX < xCoord + ConfigurationManager.Instance.Conatiner_Sphere_Radius; HX++)
+                for (int HX = xCoord - ConfigurationManager.Instance.Container_Sphere_Radius; HX < xCoord + ConfigurationManager.Instance.Container_Sphere_Radius; HX++)
                 {
-                    for (int HZ = zCoord - ConfigurationManager.Instance.Conatiner_Sphere_Radius; HZ < zCoord + ConfigurationManager.Instance.Conatiner_Sphere_Radius; HZ++)
+                    for (int HZ = zCoord - ConfigurationManager.Instance.Container_Sphere_Radius; HZ < zCoord + ConfigurationManager.Instance.Container_Sphere_Radius; HZ++)
                     {
-                        for (int HY = yCoord - ConfigurationManager.Instance.Conatiner_Sphere_Radius; HY < yCoord + ConfigurationManager.Instance.Conatiner_Sphere_Radius; HY++)
+                        for (int HY = yCoord - ConfigurationManager.Instance.Container_Sphere_Radius; HY < yCoord + ConfigurationManager.Instance.Container_Sphere_Radius; HY++)
                         {
                             float xSquare = (xCoord - HX) * (xCoord - HX);
                             float ySquare = (yCoord - HY) * (yCoord - HY);
                             float zSquare = (zCoord - HZ) * (zCoord - HZ);
                             float Dist = Mathf.Sqrt(xSquare + ySquare + zSquare);
-                            if (Dist <= ConfigurationManager.Instance.Conatiner_Sphere_Radius)
+                            if (Dist <= ConfigurationManager.Instance.Container_Sphere_Radius)
                             {
                                 int CX, CY, CZ;
                                 CX = Mathf.Clamp(HX, 1, Blocks.GetLength(0) - 2);
