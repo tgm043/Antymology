@@ -476,5 +476,32 @@ namespace Antymology.Terrain
         #endregion
 
         #endregion
+        
+        /// <summary>
+        /// Time step actions.
+        /// </summary>
+        IEnumerator TimeStepUpdate() 
+        {
+            while (true){
+                for (int i = 0; i < Blocks.GetLength(0);++i){
+                    for (int j = 0; j < Blocks.GetLength(1);++j){
+                        for (int k = 0; i < Blocks.GetLength(2);++k){
+                            if (!Blocks[i,j,k].isVisible()){
+                                AbstractBlock[,,] neighbours = new AbstractBlock[3,3,3];
+                                for (int i1 = 0; i < Blocks.GetLength(0);++i1){
+                                    for (int j1 = 0; j < Blocks.GetLength(1);++j1){
+                                        for (int k1 = 0; i < Blocks.GetLength(2);++k1){
+                                            neighbours[i1,j1,k1] = Blocks[i+i1-1,j+j1-1,k+k1-1];
+                                        }
+                                    }
+                                }
+                                ((AirBlock) Blocks[i,j,k]).Diffuse(neighbours);
+                            }
+                        }
+                    }
+                }
+                yield return new WaitForSeconds(.1f);
+            }
+        }
     }
 }

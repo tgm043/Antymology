@@ -10,7 +10,8 @@ namespace Antymology.Terrain
         private ConfigurationManager Config;
         //private GameObject[] Ants;
         
-        private AbstractBlock Touching;
+        private AbstractBlock[,,] Surrounding;
+        // Ants see in a 3 by 7 by 3 block around them, to facilitate climbing
         private Collider[] Sharing;
         private int x,y,z;
         public bool isQueen;
@@ -20,6 +21,10 @@ namespace Antymology.Terrain
         // Start is called before the first frame update
         void Start()
         {
+            x = (int) transform.position.x;
+            y = (int) transform.position.y;
+            z = (int) transform.position.z;
+            Surrounding = new AbstractBlock[3,7,3];
             Winstance = WorldManager.Instance;
             Config = ConfigurationManager.Instance;
             //Ants = Winstance.Ants;
@@ -33,44 +38,47 @@ namespace Antymology.Terrain
             
         }
         
+        void UpdateSurrounding(){
+            for (int i = 0; i < Surrounding.GetLength(0); ++i){
+                for (int j = 0; j < Surrounding.GetLength(1); ++j){
+                    for (int k = 0; k < Surrounding.GetLength(2); ++k){
+                        Surrounding[i,j,k] = Winstance.GetBlock(x+i-1,y+j-3,z+k-1);
+                    }
+                }
+            }
+        }
         
         /// <summary>
-        /// Acts once per second.
+        /// Time step actions.
         /// </summary>
         IEnumerator TimeStepUpdate() 
         {
             while (true){
-                x = (int) transform.position.x;
-                y = (int) transform.position.y;
-                z = (int) transform.position.z;
-                Touching = Winstance.GetBlock(x,y-1,z);
-                Sharing = Physics.OverlapSphere(transform.position, 0.9f);
+                UpdateSurrounding();
+                Share();
+                if (isQueen) Build();
+                
                 Move(Winstance.RNG.Next(-1, 2), Winstance.RNG.Next(-1, 2));
-                /*if (Touching as MulchBlock != null && Sharing.GetLength(0) == 0){
+                /*{
                     Consume();
-                } else if (Touching as ContainerBlock == null){
+                } else {
                     Dig();
                 }*/
                 
-                if (isQueen) Build();
                 
-                Share();
 
-                if (Touching as AcidicBlock != null){
+                if (Surrounding[1,2,1] as AcidicBlock != null){
                     hp-= Config.HpCost;
                 }
                 hp-= Config.HpCost;
                 
-                if (hp > Config.StartingHealth/2) Share();
-                
                 if (hp <= 0f){
                     gameObject.SetActive(false);
-                    Debug.Log(transform.position.x + ":" 
-                    + transform.position.y + ":"
-                    + transform.position.z);
-                    yield return null;
+                    //Debug.Log(transform.position.x + ":" 
+                    //+ transform.position.y + ":"
+                    //+ transform.position.z);
                 }
-                yield return new WaitForSeconds(1f);
+                yield return new WaitForSeconds(.1f);
             }
         }
         
@@ -82,20 +90,25 @@ namespace Antymology.Terrain
             int newY = Winstance.Ground(x+dirX, z+dirZ);
             if (newY <= y+2 && newY >= y-2){
                 transform.Translate(new Vector3(dirX, newY-y, dirZ));
-            }
+                x += dirX;
+                z += dirZ;
+                y = newY;
+                }
         }
         
         /// <summary>
         /// Shares health with other ants here.
         /// </summary>
         void Share(){
+            Sharing = Physics.OverlapSphere(transform.position, 0.9f);
             for (int i = 0; i < Sharing.GetLength(0); ++i){
-                if (Sharing[i].gameObject.GetComponent<AntBehaviour>() == null) continue;
+                if (Sharing[i].gameObject.GetComponent<AntBehaviour>() == null
+                || !Sharing[i].gameObject.activeSelf) continue;
                 float friendHp = Sharing[i].gameObject.GetComponent<AntBehaviour>().hp;
                 if (hp > friendHp){
                     hp = (hp+friendHp)/2;
                     Sharing[i].gameObject.GetComponent<AntBehaviour>().hp = hp;
-                    Debug.Log("post-share-hp: " + hp);
+                    //Debug.Log("post-share-hp: " + hp);
                 }
             }
         }
@@ -104,17 +117,21 @@ namespace Antymology.Terrain
         /// Consume a block.
         /// </summary>
         void Consume(){
-            Dig();
-            hp += Config.MulchHp;
+            if (Surrounding[1,2,1] as MulchBlock != null && Sharing.GetLength(0) == 0){
+                Dig();
+                hp += Config.MulchHp;
+            }
         }
         
         /// <summary>
         /// Dig a block.
         /// </summary>
         void Dig()
-        {
-            transform.Translate(Vector3.down);
-            Winstance.SetBlock(x,y-1,z,new AirBlock());
+        {   
+            if (Surrounding[1,2,1] as ContainerBlock == null){
+                transform.Translate(Vector3.down);
+                Winstance.SetBlock(x,--y,z,new AirBlock());
+            }
         }
         
         /// <summary>
@@ -122,9 +139,11 @@ namespace Antymology.Terrain
         /// </summary>
         void Build()
         {
-            hp *= 2f/3f;
-            transform.Translate(Vector3.up);
-            Winstance.SetBlock(x,y,z,new NestBlock());
+            if (isQueen){
+                hp -= Config.StartingHealth/3;
+                transform.Translate(Vector3.up);
+                Winstance.SetBlock(x,y++,z,new NestBlock());
+            }
         }
     }
 }
