@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace Antymology.Terrain
         /// A dictionary representing the phermone deposits in the air. Each type of phermone gets it's own byte key, and each phermone type has a concentration.
         /// THIS CURRENTLY ONLY EXISTS AS A WAY OF SHOWING YOU HOW YOU CAN MANIPULATE THE BLOCKS.
         /// </summary>
-        private Dictionary<byte, double> pheromoneDeposits;
+        public ConcurrentDictionary<byte, double> pheromoneDeposits;
 
         #endregion
 
@@ -44,6 +45,11 @@ namespace Antymology.Terrain
         public override Vector2 tileMapCoordinate()
         {
             throw new Exception("An invisible tile cannot have a tile map coordinate.");
+        }
+
+
+        public void Start(){
+            pheromoneDeposits = new ConcurrentDictionary<byte, double>();
         }
 
         /// <summary>

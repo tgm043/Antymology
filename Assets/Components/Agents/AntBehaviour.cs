@@ -8,8 +8,6 @@ namespace Antymology.Terrain
     {
         private WorldManager Winstance;
         private ConfigurationManager Config;
-        //private GameObject[] Ants;
-        
         private AbstractBlock[,,] Surrounding;
         // Ants see in a 3 by 7 by 3 block around them, to facilitate climbing
         private Collider[] Sharing;
@@ -134,6 +132,11 @@ namespace Antymology.Terrain
             }
         }
         
+        void Secrete(byte type, int amount){
+            AirBlock here = (AirBlock) Surrounding[1,3,1];
+            here.pheromoneDeposits.AddOrUpdate(type, amount, (k,v) => v+amount);
+        }
+        
         /// <summary>
         /// Build a nest block.
         /// </summary>
@@ -144,6 +147,15 @@ namespace Antymology.Terrain
                 transform.Translate(Vector3.up);
                 Winstance.SetBlock(x,y++,z,new NestBlock());
             }
+        }
+        
+        public void Act(int x, int y, int action, byte type, int amount){
+            Move(x,y);
+            if (action == 0) Dig();
+            else if (action == 1) Consume();
+            else if (action == 2) Share();
+            else if (action == 3) Build();
+            Secrete(type, amount);
         }
     }
 }
