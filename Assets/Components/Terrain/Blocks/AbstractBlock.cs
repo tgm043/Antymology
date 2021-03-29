@@ -15,6 +15,12 @@ public abstract class AbstractBlock
     /// </summary>
     public abstract bool isVisible();
 
+    
+    /// <summary>
+    /// Assigns arbitrary value to a block.
+    /// </summary>
+    public abstract int score();
+
     /// <summary>
     /// The woorld x coordinate of this block.
     /// </summary>

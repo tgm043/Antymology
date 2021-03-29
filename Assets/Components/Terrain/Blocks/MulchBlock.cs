@@ -19,7 +19,12 @@ namespace Antymology.Terrain
         /// Statically held is visible.
         /// </summary>
         private static bool _isVisible = true;
-
+        
+        /// <summary>
+        /// Statically held score.
+        /// </summary>
+        private static int _score = ConfigurationManager.Instance.MulchHp;
+    
         #endregion
 
         #region Methods
@@ -39,7 +44,14 @@ namespace Antymology.Terrain
         {
             return _isVisible;
         }
-
+        
+        /// <summary>
+        /// mulch has a nice value.
+        /// </summary>
+        public override int score(){
+            return _score;
+        }
+       
         #endregion
 
     }

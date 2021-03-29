@@ -20,6 +20,13 @@ namespace Antymology.Terrain
         /// </summary>
         private static bool _isVisible = true;
 
+
+        /// <summary>
+        /// Statically held score.
+        /// </summary>
+        private static int _score = 255;
+
+
         #endregion
 
         #region Methods
@@ -38,6 +45,14 @@ namespace Antymology.Terrain
         public override bool isVisible()
         {
             return _isVisible;
+        }
+
+    
+        /// <summary>
+        /// nest: the win condition.
+        /// </summary>
+        public override int score(){
+            return _score;
         }
 
         #endregion

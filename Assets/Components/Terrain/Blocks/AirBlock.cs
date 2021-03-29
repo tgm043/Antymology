@@ -25,7 +25,10 @@ namespace Antymology.Terrain
         /// A dictionary representing the phermone deposits in the air. Each type of phermone gets it's own byte key, and each phermone type has a concentration.
         /// THIS CURRENTLY ONLY EXISTS AS A WAY OF SHOWING YOU HOW YOU CAN MANIPULATE THE BLOCKS.
         /// </summary>
-        public ConcurrentDictionary<byte, double> pheromoneDeposits;
+        public ConcurrentDictionary<bool, double> pheromoneDeposits;
+
+
+        
 
         #endregion
 
@@ -48,8 +51,15 @@ namespace Antymology.Terrain
         }
 
 
+        public override int score(){
+            int positive = (int) pheromoneDeposits[true];
+            int negative = (int) pheromoneDeposits[false];
+            return positive-negative;
+        }
+    
+
         public void Start(){
-            pheromoneDeposits = new ConcurrentDictionary<byte, double>();
+            pheromoneDeposits = new ConcurrentDictionary<bool, double>();
         }
 
         /// <summary>
@@ -63,7 +73,7 @@ namespace Antymology.Terrain
                     for (int k = 0; i < neighbours.GetLength(2); ++k){
                         AirBlock neighbour = neighbours[i,j,k] as AirBlock;
                         if (neighbour != null){
-                            foreach(KeyValuePair<byte, double> entry in neighbour.pheromoneDeposits){
+                            foreach(KeyValuePair<bool, double> entry in neighbour.pheromoneDeposits){
                                 pheromoneDeposits[entry.Key] = (pheromoneDeposits[entry.Key] + neighbour.pheromoneDeposits[entry.Key])/2;
                                 neighbour.pheromoneDeposits[entry.Key] = pheromoneDeposits[entry.Key];
                             }

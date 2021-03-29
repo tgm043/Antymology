@@ -13,7 +13,7 @@ namespace Antymology.Terrain
         private Collider[] Sharing;
         private int x,y,z;
         public bool isQueen;
-        public float hp;
+        public int hp;
         
         
         // Start is called before the first frame update
@@ -102,7 +102,7 @@ namespace Antymology.Terrain
             for (int i = 0; i < Sharing.GetLength(0); ++i){
                 if (Sharing[i].gameObject.GetComponent<AntBehaviour>() == null
                 || !Sharing[i].gameObject.activeSelf) continue;
-                float friendHp = Sharing[i].gameObject.GetComponent<AntBehaviour>().hp;
+                int friendHp = Sharing[i].gameObject.GetComponent<AntBehaviour>().hp;
                 if (hp > friendHp){
                     hp = (hp+friendHp)/2;
                     Sharing[i].gameObject.GetComponent<AntBehaviour>().hp = hp;
@@ -132,9 +132,14 @@ namespace Antymology.Terrain
             }
         }
         
-        void Secrete(byte type, int amount){
+        /// <summary>
+        /// Secrete some pheromone. The queen's pheromone is more intense.
+        /// </summary>
+        void Secrete(bool type, int amount){
+            int multiplier = 1;
+            if (isQueen) multiplier *= 10;
             AirBlock here = (AirBlock) Surrounding[1,3,1];
-            here.pheromoneDeposits.AddOrUpdate(type, amount, (k,v) => v+amount);
+            here.pheromoneDeposits.AddOrUpdate(type, amount, (k,v) => v+amount*multiplier);
         }
         
         /// <summary>
@@ -146,10 +151,11 @@ namespace Antymology.Terrain
                 hp -= Config.StartingHealth/3;
                 transform.Translate(Vector3.up);
                 Winstance.SetBlock(x,y++,z,new NestBlock());
+                Winstance.NestCount++;
             }
         }
         
-        public void Act(int x, int y, int action, byte type, int amount){
+        public void Act(int x, int y, int action, bool type, int amount){
             Move(x,y);
             if (action == 0) Dig();
             else if (action == 1) Consume();

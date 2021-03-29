@@ -58,7 +58,7 @@ public class ConfigurationManager : Singleton<ConfigurationManager>
     /// <summary>
     /// Initial health of ant
     /// </summary>
-    public int StartingHealth = 200;
+    public int StartingHealth = 20;
     
     /// <summary>
     /// Health gained from eating mulch

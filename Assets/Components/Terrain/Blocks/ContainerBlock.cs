@@ -19,6 +19,13 @@ namespace Antymology.Terrain
         /// </summary>
         private static bool _isVisible = true;
 
+
+        /// <summary>
+        /// Statically held score.
+        /// </summary>
+        private static int _score = -1;
+
+
         #endregion
 
         #region Methods
@@ -39,6 +46,12 @@ namespace Antymology.Terrain
             return _isVisible;
         }
 
+        /// <summary>
+        /// container is also quite bad.
+        /// </summary>
+        public override int score(){
+            return _score;
+        }
         #endregion
 
     }

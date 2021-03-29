@@ -2,7 +2,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+
+
 using UnityEngine;
+
 
 namespace Antymology.Terrain
 {
@@ -46,6 +49,12 @@ namespace Antymology.Terrain
         /// </summary>
         private SimplexNoise SimplexNoise;
 
+        
+        /// <summary>
+        /// 'Score'.
+        /// </summary>
+        public int NestCount;
+
         #endregion
 
         #region Initialization
@@ -55,6 +64,10 @@ namespace Antymology.Terrain
         /// </summary>
         void Awake()
         {
+            
+            
+            
+            
             // Generate new random number generator
             RNG = new System.Random(ConfigurationManager.Instance.Seed);
 
@@ -477,6 +490,11 @@ namespace Antymology.Terrain
 
         #endregion
         
+        #region Game
+        
+        
+        
+        
         /// <summary>
         /// Time step actions.
         /// </summary>
@@ -488,9 +506,9 @@ namespace Antymology.Terrain
                         for (int k = 0; i < Blocks.GetLength(2);++k){
                             if (!Blocks[i,j,k].isVisible()){
                                 AbstractBlock[,,] neighbours = new AbstractBlock[3,3,3];
-                                for (int i1 = 0; i < Blocks.GetLength(0);++i1){
-                                    for (int j1 = 0; j < Blocks.GetLength(1);++j1){
-                                        for (int k1 = 0; i < Blocks.GetLength(2);++k1){
+                                for (int i1 = 0; i < neighbours.GetLength(0);++i1){
+                                    for (int j1 = 0; j < neighbours.GetLength(1);++j1){
+                                        for (int k1 = 0; i < neighbours.GetLength(2);++k1){
                                             neighbours[i1,j1,k1] = Blocks[i+i1-1,j+j1-1,k+k1-1];
                                         }
                                     }
@@ -503,5 +521,11 @@ namespace Antymology.Terrain
                 yield return new WaitForSeconds(.1f);
             }
         }
+        
+        
+        
+        
+        
+        #endregion
     }
 }
