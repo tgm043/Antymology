@@ -50,6 +50,7 @@ namespace Antymology.Terrain
                         }
                         
                         epoch++;
+                        Debug.Log(epoch);
                     }
                     
                     currentTime = 0;
