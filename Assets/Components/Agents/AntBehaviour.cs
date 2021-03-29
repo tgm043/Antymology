@@ -9,6 +9,8 @@ namespace Antymology.Terrain
         private WorldManager Winstance;
         private ConfigurationManager Config;
         private AbstractBlock[,,] Surrounding;
+        private float[] Score;
+        public NeuralNetwork Network;
         // Ants see in a 3 by 7 by 3 block around them, to facilitate climbing
         private Collider[] Sharing;
         private int x,y,z;
@@ -23,7 +25,9 @@ namespace Antymology.Terrain
             y = (int) transform.position.y;
             z = (int) transform.position.z;
             Surrounding = new AbstractBlock[3,7,3];
+            Score = new float[3*7*3+3];
             Winstance = WorldManager.Instance;
+            Network = Winstance.AntDirective;
             Config = ConfigurationManager.Instance;
             //Ants = Winstance.Ants;
             hp = Config.StartingHealth;
@@ -36,15 +40,22 @@ namespace Antymology.Terrain
             
         }
         
+        /// <summary>
+        /// Ant observing their surrounding.
+        /// </summary>
         void UpdateSurrounding(){
+            int c = 0;
             for (int i = 0; i < Surrounding.GetLength(0); ++i){
                 for (int j = 0; j < Surrounding.GetLength(1); ++j){
                     for (int k = 0; k < Surrounding.GetLength(2); ++k){
                         Surrounding[i,j,k] = Winstance.GetBlock(x+i-1,y+j-3,z+k-1);
+                        Score[c++] = Surrounding[i,j,k].score();
                     }
                 }
             }
+            Sharing = Physics.OverlapSphere(transform.position, 0.9f);
         }
+        
         
         /// <summary>
         /// Time step actions.
@@ -53,17 +64,28 @@ namespace Antymology.Terrain
         {
             while (true){
                 UpdateSurrounding();
-                Share();
-                if (isQueen) Build();
+                Score[63] = hp;
+                Score[64] = isQueen ? 1 : 0;
+                Score[65] = Sharing.Length;
+                float[] toAct = Network.FeedForward(Score);
+                int toX = 0;
+                if (toAct[0] > 1f) toX = 1;
+                if (toAct[0] < -1f) toX = -1;
+
+                int toY = 0;
+                if (toAct[1] > 1f) toY = 1;
+                if (toAct[1] < -1f) toY = -1;
                 
-                Move(Winstance.RNG.Next(-1, 2), Winstance.RNG.Next(-1, 2));
-                /*{
-                    Consume();
-                } else {
-                    Dig();
-                }*/
+                int toAction = 2;
+                if (toAct[2] > 1f) toAction = 3;
+                if (toAct[2] > 0) toAction = 1;
+                if (toAct[2] < -1f) toAction = 0;
                 
+                bool toSecrete = toAct[3] > 0;
                 
+                float amount = toAct[4];
+                
+                Act(toX, toY, toAction, toSecrete, amount);
 
                 if (Surrounding[1,2,1] as AcidicBlock != null){
                     hp-= Config.HpCost;
@@ -76,7 +98,7 @@ namespace Antymology.Terrain
                     //+ transform.position.y + ":"
                     //+ transform.position.z);
                 }
-                yield return new WaitForSeconds(.1f);
+                yield return new WaitForSeconds(Config.TimeStep);
             }
         }
         
@@ -98,7 +120,6 @@ namespace Antymology.Terrain
         /// Shares health with other ants here.
         /// </summary>
         void Share(){
-            Sharing = Physics.OverlapSphere(transform.position, 0.9f);
             for (int i = 0; i < Sharing.GetLength(0); ++i){
                 if (Sharing[i].gameObject.GetComponent<AntBehaviour>() == null
                 || !Sharing[i].gameObject.activeSelf) continue;
@@ -135,7 +156,7 @@ namespace Antymology.Terrain
         /// <summary>
         /// Secrete some pheromone. The queen's pheromone is more intense.
         /// </summary>
-        void Secrete(bool type, int amount){
+        void Secrete(bool type, float amount){
             int multiplier = 1;
             if (isQueen) multiplier *= 10;
             AirBlock here = (AirBlock) Surrounding[1,3,1];
@@ -155,7 +176,7 @@ namespace Antymology.Terrain
             }
         }
         
-        public void Act(int x, int y, int action, bool type, int amount){
+        public void Act(int x, int y, int action, bool type, float amount){
             Move(x,y);
             if (action == 0) Dig();
             else if (action == 1) Consume();

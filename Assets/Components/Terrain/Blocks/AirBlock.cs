@@ -25,7 +25,7 @@ namespace Antymology.Terrain
         /// A dictionary representing the phermone deposits in the air. Each type of phermone gets it's own byte key, and each phermone type has a concentration.
         /// THIS CURRENTLY ONLY EXISTS AS A WAY OF SHOWING YOU HOW YOU CAN MANIPULATE THE BLOCKS.
         /// </summary>
-        public ConcurrentDictionary<bool, double> pheromoneDeposits;
+        public ConcurrentDictionary<bool, double> pheromoneDeposits  = new ConcurrentDictionary<bool, double>();
 
 
         
@@ -52,14 +52,17 @@ namespace Antymology.Terrain
 
 
         public override int score(){
-            int positive = (int) pheromoneDeposits[true];
-            int negative = (int) pheromoneDeposits[false];
+            pheromoneDeposits.TryAdd(true,0d);
+            pheromoneDeposits.TryAdd(false,0d);
+            int positive = (int) this.pheromoneDeposits[true];
+            int negative = (int) this.pheromoneDeposits[false];
             return positive-negative;
         }
     
+        
 
         public void Start(){
-            pheromoneDeposits = new ConcurrentDictionary<bool, double>();
+            
         }
 
         /// <summary>

@@ -69,4 +69,9 @@ public class ConfigurationManager : Singleton<ConfigurationManager>
     /// Health loss per time step
     /// </summary>
     public int HpCost = 1;
+    
+    /// <summary>
+    /// Time for time step
+    /// </summary>
+    public float TimeStep = 0.001f;
 }

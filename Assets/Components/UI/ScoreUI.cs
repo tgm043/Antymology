@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Antymology.Terrain
 {
-    public class Score : MonoBehaviour
+    public class ScoreUI : MonoBehaviour
     {
         // Start is called before the first frame update
         void Start()

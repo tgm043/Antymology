@@ -401,6 +401,7 @@ MonoBehaviour:
   StartingHealth: 20
   MulchHp: 20
   HpCost: 1
+  TimeStep: 0.001
 --- !u!114 &964896560
 MonoBehaviour:
   m_ObjectHideFlags: 0

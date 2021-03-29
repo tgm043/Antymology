@@ -50,6 +50,8 @@ namespace Antymology.Terrain
         private SimplexNoise SimplexNoise;
 
         
+        public NeuralNetwork AntDirective;
+        
         /// <summary>
         /// 'Score'.
         /// </summary>
@@ -66,7 +68,9 @@ namespace Antymology.Terrain
         {
             
             
-            
+            AntDirective = new NeuralNetwork(ConfigurationManager.Instance.Seed);
+            AntDirective.randomizeBiases();
+            AntDirective.randomizeWeights();
             
             // Generate new random number generator
             RNG = new System.Random(ConfigurationManager.Instance.Seed);
@@ -92,6 +96,9 @@ namespace Antymology.Terrain
         /// </summary>
         private void Start()
         {
+            Camera.main.transform.position = new Vector3(0 / 2, Blocks.GetLength(1), 0);
+            Camera.main.transform.LookAt(new Vector3(Blocks.GetLength(0), 0, Blocks.GetLength(2)));
+
             Init();
         }
 
@@ -99,9 +106,7 @@ namespace Antymology.Terrain
             GenerateData();
             GenerateChunks();
 
-            Camera.main.transform.position = new Vector3(0 / 2, Blocks.GetLength(1), 0);
-            Camera.main.transform.LookAt(new Vector3(Blocks.GetLength(0), 0, Blocks.GetLength(2)));
-
+            
             GenerateAnts();
         }
         
@@ -115,10 +120,30 @@ namespace Antymology.Terrain
             }
             
             Destroy(GameObject.Find("Chunks"));
-            
             for (int i = 0; i < Ants.Length; ++i){
                 Destroy(Ants[i]);
             }
+            
+            AntDirective.randomizeBiases();
+            AntDirective.randomizeWeights();
+            Init();
+        }
+        
+        public void Reset(NeuralNetwork nextGen){
+            for (int i = 0; i < Blocks.GetLength(0); ++i){
+                for (int j = 0; j < Blocks.GetLength(1); ++j){
+                    for (int k = 0; k < Blocks.GetLength(2); ++k){
+                        Blocks[i,j,k]= new AirBlock();
+                    }
+                }
+            }
+            
+            Destroy(GameObject.Find("Chunks"));
+            for (int i = 0; i < Ants.Length; ++i){
+                Destroy(Ants[i]);
+            }
+
+            AntDirective = nextGen;
             Init();
         }
 
@@ -130,7 +155,6 @@ namespace Antymology.Terrain
             Ants = new GameObject[ConfigurationManager.Instance.Number_Of_Ants];
             for (int i = 0; i < Ants.GetLength(0); i++)
             {
-                
                 int xCoord = RNG.Next(1, Blocks.GetLength(0)-1);
                 int zCoord = RNG.Next(1, Blocks.GetLength(2)-1);
                 int yCoord = Ground(xCoord, zCoord);
@@ -282,8 +306,8 @@ namespace Antymology.Terrain
                 zCoord >= Blocks.GetLength(2)
             )
             {
-                Debug.Log("Attempted to find a column which didn't exist");
-                return -1;
+                //Debug.Log("Attempted to find a column which didn't exist");
+                return int.MaxValue;
             }
             for (int i = 0; i < Blocks.GetLength(1); ++i){
                 if (Blocks[xCoord, i, zCoord] as AirBlock != null){
@@ -291,7 +315,7 @@ namespace Antymology.Terrain
                 }
             }
             //Debug.Log("Column is completely full");
-            return Blocks.GetLength(1);
+            return int.MaxValue;//old: Blocks.GetLength(1);
         }
         
             
@@ -539,7 +563,7 @@ namespace Antymology.Terrain
                         }
                     }
                 }
-                yield return new WaitForSeconds(.1f);
+                yield return new WaitForSeconds(ConfigurationManager.Instance.TimeStep);
             }
         }
         

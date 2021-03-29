@@ -1,10 +1,11 @@
 ﻿using System.Collections;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
 //adapted from https://github.com/kipgparker/MutationNetwork
 //lots of hard coded stuff here
-public class NeuralNetwork
+public class NeuralNetwork : IComparable<NeuralNetwork>
 {
     public int seed;
     public int[] Layers;
@@ -12,7 +13,21 @@ public class NeuralNetwork
     public float[][] Biases;
     public float[][][] Weights;
     public System.Random RNG;
+    public int score;
     
+    public int CompareTo(NeuralNetwork other) //Comparing For NeuralNetworks performance.
+    {
+        if (other == null) return 1;
+
+        if (score > other.score)
+            return 1;
+        else if (score < other.score)
+            return -1;
+        else
+            return 0;
+    }
+    
+    public NeuralNetwork() : this(0){}
     
     public NeuralNetwork(int seed){
         this.seed = seed;
@@ -120,6 +135,30 @@ public class NeuralNetwork
         }
     }
     
+    //For creating a deep copy, to ensure arrays are serialized.
+    public NeuralNetwork copy(NeuralNetwork nn) 
+    {
+        for (int i = 0; i < Biases.Length; i++)
+        {
+            for (int j = 0; j < Biases[i].Length; j++)
+            {
+                nn.Biases[i][j] = Biases[i][j];
+            }
+        }
+        for (int i = 0; i < Weights.Length; i++)
+        {
+            for (int j = 0; j < Weights[i].Length; j++)
+            {
+                for (int k = 0; k < Weights[i][j].Length; k++)
+                {
+                    nn.Weights[i][j][k] = Weights[i][j][k];
+                }
+            }
+        }
+        nn.seed = seed;
+        return nn;
+    }
+    
     //this loads the Biases and Weights from within a file into the neural network.
     public void load(string path)
     {
@@ -183,4 +222,6 @@ public class NeuralNetwork
         }
         writer.Close();
     }
+    
+    
 }
