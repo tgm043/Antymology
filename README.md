@@ -26,3 +26,6 @@ The ants see in an area around them (in terms of its score) and use this informa
 - Producing a single nest block must cost the queen 1/3rd of her maximum health.
 - No new ants can be created during each evaluation phase (you are allowed to create as many ants as you need for each new generation though).
 - Ants can secrete pheromones, a 'positive' or a 'negative' pheromone into the air.
+
+### Training
+- Model is saved after each 100 epochs.
