@@ -337,6 +337,7 @@ GameObject:
   - component: {fileID: 964896558}
   - component: {fileID: 964896557}
   - component: {fileID: 964896559}
+  - component: {fileID: 964896560}
   m_Layer: 0
   m_Name: WorldManager
   m_TagString: Untagged
@@ -360,7 +361,6 @@ MonoBehaviour:
     type: 3}
   Ants: []
   blockMaterial: {fileID: 2100000, guid: 4db9d8fce1a69b74f81daf1375c9ed88, type: 2}
-  Layers: 
   NestCount: 0
 --- !u!4 &964896558
 Transform:
@@ -401,3 +401,15 @@ MonoBehaviour:
   StartingHealth: 20
   MulchHp: 20
   HpCost: 1
+--- !u!114 &964896560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 964896556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15f05a621bf2b2b40b1b5618a690cb3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

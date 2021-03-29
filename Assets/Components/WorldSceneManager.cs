@@ -14,6 +14,7 @@ namespace Antymology.Terrain
         void Start()
         {
             current_time = 0;
+            StartCoroutine("Terminator");
         }
 
         // Update is called once per frame
@@ -28,7 +29,7 @@ namespace Antymology.Terrain
                 if (current_time > 10d)
                 {
                     current_time = 0;
-                    SceneManager.LoadScene("SampleScene");
+                    WorldManager.Instance.Reset();
                 }
                 yield return new WaitForSeconds(5f);
             }

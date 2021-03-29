@@ -92,6 +92,10 @@ namespace Antymology.Terrain
         /// </summary>
         private void Start()
         {
+            Init();
+        }
+
+        public void Init(){
             GenerateData();
             GenerateChunks();
 
@@ -99,6 +103,23 @@ namespace Antymology.Terrain
             Camera.main.transform.LookAt(new Vector3(Blocks.GetLength(0), 0, Blocks.GetLength(2)));
 
             GenerateAnts();
+        }
+        
+        public void Reset(){
+            for (int i = 0; i < Blocks.GetLength(0); ++i){
+                for (int j = 0; j < Blocks.GetLength(1); ++j){
+                    for (int k = 0; k < Blocks.GetLength(2); ++k){
+                        Blocks[i,j,k]= new AirBlock();
+                    }
+                }
+            }
+            
+            Destroy(GameObject.Find("Chunks"));
+            
+            for (int i = 0; i < Ants.Length; ++i){
+                Destroy(Ants[i]);
+            }
+            Init();
         }
 
         /// <summary>
