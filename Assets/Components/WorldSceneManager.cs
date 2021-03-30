@@ -11,7 +11,6 @@ namespace Antymology.Terrain
     {
         private double currentTime = 0.0d;
         private NeuralNetwork[] currentBatch = new NeuralNetwork[10];
-        private NeuralNetwork[] nextBatch = new NeuralNetwork[10];
         private int counter = 0;
         private int epoch = 0;
         
@@ -35,38 +34,40 @@ namespace Antymology.Terrain
                     currentBatch[counter] = new NeuralNetwork();
                     currentBatch[counter].copy(WorldManager.Instance.AntDirective);
                     currentBatch[counter].score = WorldManager.Instance.NestCount;
-                    Debug.Log(currentBatch[counter].score);
+                    //Debug.Log(currentBatch[counter].score);
 
                     counter++;
                     if (counter == 10){
                         counter = 0;
                         
                         Array.Sort(currentBatch);
+                        for (int i = 0; i < 10; ++i){
+                            Debug.Log(currentBatch[i].score);
+                        }
                         for (int i = 0; i < 5; ++i){
-                            nextBatch[i+5] = currentBatch[i+5];
-                            nextBatch[i+5].mutate(0.1f);
-                            nextBatch[i] = currentBatch[i].crossover(currentBatch[(i+1)%5]);
-                            nextBatch[i].mutate(0.1f);
-                            
+                            currentBatch[i+5].mutate(0.25f);
+                            currentBatch[i] = new NeuralNetwork();
+                            currentBatch[i].copy(currentBatch[i+5]);
+                            currentBatch[i].mutate(0.25f);
                         }
                         
                         epoch++;
-                        Debug.Log(epoch);
+                        //Debug.Log(epoch);
                         
                     }
                     
                     currentTime = 0;
-                    if (nextBatch[counter] == null){
+                    if (currentBatch[counter] == null){
                         NeuralNetwork nn = new NeuralNetwork(ConfigurationManager.Instance.Seed);
                         nn.randomizeBiases();
                         nn.randomizeWeights();
                         WorldManager.Instance.Reset(nn);
                     } else {
-                        WorldManager.Instance.Reset(nextBatch[counter]);
+                        WorldManager.Instance.Reset(currentBatch[counter]);
                     }
                 }
                 if (epoch == 10){
-                    nextBatch[9].save("Assets/Components/model" + epoch + ".txt");
+                    currentBatch[9].save("Assets/Components/model" + epoch + ".txt");
                 }
                 
                 yield return new WaitForSeconds(1f);

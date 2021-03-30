@@ -54,7 +54,7 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
     public void randomizeBiases(){
         for (int i = 0; i < 5; ++i){
             for (int j = 0; j < Layers[i]; ++j){
-                Biases[i][j] = ((float) RNG.NextDouble())*10 - 5f;
+                Biases[i][j] = ((float) RNG.NextDouble())*2 - 1f;
             }
         }
     }
@@ -63,7 +63,7 @@ public class NeuralNetwork : IComparable<NeuralNetwork>
         for (int i = 0; i < 4; ++i){
             for (int j = 0; j < Layers[i]; ++j){
                 for (int k = 0; k < Layers[i+1];++k){
-                    Weights[i][j][k] = ((float) RNG.NextDouble())*10 - 5f;
+                    Weights[i][j][k] = ((float) RNG.NextDouble())*2 - 1f;
                 }
             }
         }
