@@ -69,8 +69,9 @@ namespace Antymology.Terrain
             
             
             AntDirective = new NeuralNetwork(ConfigurationManager.Instance.Seed);
-            AntDirective.randomizeBiases();
-            AntDirective.randomizeWeights();
+            //AntDirective.randomizeBiases();
+            //AntDirective.randomizeWeights();
+            AntDirective.load("Assets/Components/model10.txt");
             
             // Generate new random number generator
             RNG = new System.Random(ConfigurationManager.Instance.Seed);
@@ -103,6 +104,7 @@ namespace Antymology.Terrain
         }
 
         public void Init(){
+            NestCount = 0;
             GenerateData();
             GenerateChunks();
 
@@ -130,6 +132,7 @@ namespace Antymology.Terrain
         }
         
         public void Reset(NeuralNetwork nextGen){
+            
             for (int i = 0; i < Blocks.GetLength(0); ++i){
                 for (int j = 0; j < Blocks.GetLength(1); ++j){
                     for (int k = 0; k < Blocks.GetLength(2); ++k){

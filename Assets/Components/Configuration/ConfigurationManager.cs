@@ -63,7 +63,7 @@ public class ConfigurationManager : Singleton<ConfigurationManager>
     /// <summary>
     /// Health gained from eating mulch
     /// </summary>
-    public int MulchHp = 20;
+    public int MulchHp = 40;
     
     /// <summary>
     /// Health loss per time step

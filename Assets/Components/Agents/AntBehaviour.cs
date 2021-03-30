@@ -68,18 +68,19 @@ namespace Antymology.Terrain
                 Score[64] = isQueen ? 1 : 0;
                 Score[65] = Sharing.Length;
                 float[] toAct = Network.FeedForward(Score);
+                //Debug.Log(toAct[2]);
                 int toX = 0;
-                if (toAct[0] > 1f) toX = 1;
-                if (toAct[0] < -1f) toX = -1;
+                if (toAct[0] > 0.333f) toX = 1;
+                else if (toAct[0] > -0.333f) toX = -1;
 
                 int toY = 0;
-                if (toAct[1] > 1f) toY = 1;
-                if (toAct[1] < -1f) toY = -1;
+                if (toAct[1] > 0.333f) toY = 1;
+                else if (toAct[1] > -0.333f) toY = -1;
                 
-                int toAction = 2;
-                if (toAct[2] > 1f) toAction = 3;
-                if (toAct[2] > 0) toAction = 1;
-                if (toAct[2] < -1f) toAction = 0;
+                int toAction = 3;
+                if (toAct[2] > .5f) toAction = 1;
+                else if (toAct[2] > 0f) toAction = 2;
+                else if (toAct[2] > -0.5f) toAction = 0;
                 
                 bool toSecrete = toAct[3] > 0;
                 
@@ -147,7 +148,7 @@ namespace Antymology.Terrain
         /// </summary>
         void Dig()
         {   
-            if (Surrounding[1,2,1] as ContainerBlock == null){
+            if (Surrounding[1,2,1] as ContainerBlock == null && y > 1){
                 transform.Translate(Vector3.down);
                 Winstance.SetBlock(x,--y,z,new AirBlock());
             }
@@ -178,6 +179,7 @@ namespace Antymology.Terrain
         
         public void Act(int x, int y, int action, bool type, float amount){
             Move(x,y);
+            //Debug.Log(action);
             if (action == 0) Dig();
             else if (action == 1) Consume();
             else if (action == 2) Share();

@@ -399,9 +399,9 @@ MonoBehaviour:
   Container_Sphere_Radius: 10
   Number_Of_Ants: 100
   StartingHealth: 20
-  MulchHp: 20
+  MulchHp: 40
   HpCost: 1
-  TimeStep: 0.001
+  TimeStep: 0.0001
 --- !u!114 &964896560
 MonoBehaviour:
   m_ObjectHideFlags: 0

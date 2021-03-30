@@ -35,7 +35,8 @@ namespace Antymology.Terrain
                     currentBatch[counter] = new NeuralNetwork();
                     currentBatch[counter].copy(WorldManager.Instance.AntDirective);
                     currentBatch[counter].score = WorldManager.Instance.NestCount;
-                    
+                    Debug.Log(currentBatch[counter].score);
+
                     counter++;
                     if (counter == 10){
                         counter = 0;
@@ -51,6 +52,7 @@ namespace Antymology.Terrain
                         
                         epoch++;
                         Debug.Log(epoch);
+                        
                     }
                     
                     currentTime = 0;
@@ -63,9 +65,10 @@ namespace Antymology.Terrain
                         WorldManager.Instance.Reset(nextBatch[counter]);
                     }
                 }
-                if (epoch == 100){
-                    currentBatch[9].save("model" + epoch + ".txt");
-                } 
+                if (epoch == 10){
+                    nextBatch[9].save("Assets/Components/model" + epoch + ".txt");
+                }
+                
                 yield return new WaitForSeconds(1f);
             }
         }
